@@ -1,0 +1,11 @@
+library(tidyverse)
+library(rpivotTable)
+dt <- read_delim("~/Desktop/dau/留存/logstic.tsv", 
+                      "\t", escape_double = FALSE, trim_ws = TRUE)
+dt$win <- as.factor(dt$win)
+train <- sample_frac(dt,size = 0.007)
+test <- setdiff(dt,train)
+fit <- glm(win~.,data = train,family=binomial())
+rpivotTable(dt)
+colnames(dt)
+ggplot(dt,aes(x=vvtimes/alltimes,colour = win)) + geom_density(stat="density")
