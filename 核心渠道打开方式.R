@@ -9,5 +9,6 @@ rpivotTable(pcid_exit_vname)
 
 
 
-data <- read.table(pipe("pbpaste"), sep="\t", header=T)
-View(data)
+read.table(pipe("pbpaste"), sep="\t", header=T) %>% filter(starttime > 1000) %>%
+  mutate(startimeofone = starttime/startuv) %>% 
+  rpivotTable()

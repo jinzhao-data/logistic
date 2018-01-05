@@ -1,0 +1,49 @@
+---
+title: "波波视频用户行为分布"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE,warning= FALSE}
+library(flexdashboard)
+library(tidyverse)
+library(plotly)
+```
+
+Column {data-width=500}
+-----------------------------------------------------------------------
+
+###单个视频播放时长分布
+vtime = vvtime/vv
+vtime：单个视频播放时长
+vvtime:播放时长
+vv：播放次数
+单个视频播放时长67秒，用户留存概率增加
+```{r warning= FALSE,message= FALSE}
+dt <- read_delim("~/Desktop/dau/留存/logistic.tsv", "\t", escape_double = FALSE, trim_ws = TRUE)
+dt$win <- as.factor(dt$win)
+ploy <- dt %>% mutate(vtime = vvtimes/vv) %>% ggplot(aes(x = vtime,colour = win)) + geom_density(stat = 'density') + xlim(c(-1,1000))
+ggplotly(ploy)
+```
+
+Column {data-width=500}
+-----------------------------------------------------------------------
+
+### 播放完成度
+播放完成度：播放总时长/视频总时长
+播放完成度上也有差异，留存用户播放完成度峰值为32%，流失用户播放完成度13%
+交叉点可见，在24%为分割线，如果大于24%，用户更用力留存！
+```{r warning= FALSE,message=FALSE}
+p_complite <- dt %>% mutate(prob_complite = vvtimes/alltimes) %>% ggplot(aes(x = prob_complite,colour = win)) + geom_density(stat = 'density') + xlim(c(0,2))
+ggplotly(p_complite)
+```
+
+### Chart C
+
+```{r}
+p_start <- dt %>% ggplot(aes(x = appstrart,colour = win)) + geom_histogram() + xlim(c(0,20))
+ggplotly(p_start)
+```
+
